@@ -9,5 +9,6 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mPresenter = ChatPresenter()
 
+
     }
 }
