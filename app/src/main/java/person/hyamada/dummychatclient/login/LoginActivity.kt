@@ -15,6 +15,7 @@ import person.hyamada.dummychatclient.R
 import person.hyamada.dummychatclient.chat.ChatActivity
 import person.hyamada.dummychatclient.ui.observer.createObserableFromButton
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class LoginActivity : AppCompatActivity() {
 
@@ -55,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
         client.newCall(request).enqueue( object: Callback{
             override fun onFailure(call: Call?, e: IOException?) {
                 Log.d("ymd", e.toString())
-                Toast.makeText(app,"FAIL", Toast.LENGTH_LONG).show()
+                toast("TIMEOUT")
             }
 
             override fun onResponse(call: Call?, response: Response?) {
@@ -66,7 +67,6 @@ class LoginActivity : AppCompatActivity() {
                 }
                 Log.d("ymd", "uid: " + response!!.header("Uid"))
                 Log.d("ymd", "token: " + response!!.header("Access-Token"))
-                Toast.makeText(app,"res" +response.toString(), Toast.LENGTH_LONG).show()
                 val token = response.header("Access-Token")
                 val intent = Intent(app, ChatActivity::class.java )
                         .putExtra("EMAIL", id)
