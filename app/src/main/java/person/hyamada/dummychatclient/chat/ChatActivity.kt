@@ -17,12 +17,12 @@ class ChatActivity : AppCompatActivity() {
         mPresenter = ChatPresenter(this)
         findViewById<TextView>(R.id.textView1).setText(mPresenter.email)
         findViewById<TextView>(R.id.textView2).setText(mPresenter.token)
-
+        mPresenter.onMessageArrive = { message : String ->
+            findViewById<TextView>(R.id.textView2).setText(message)
+        }
+        mPresenter.getMessages()
     }
 
-    interface ChatCallback {
-        fun a()
-        fun b()
-    }
+
 
 }
