@@ -1,10 +1,13 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
+long startTime
+
 buildscript {
     ext.kotlin_version = '1.2.30'
     repositories {
-        google()
+//        google()
         jcenter()
+        maven { url 'https://maven.google.com' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.4'
@@ -16,9 +19,20 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
+//        google()
         jcenter()
+        maven { url 'https://maven.google.com' }
     }
+}
+gradle.beforeProject {
+    startTime = System.nanoTime()
+}
+
+gradle.buildFinished {
+    println "build finished!"
+    long execution = (System.nanoTime() - startTime) / 1000000
+    println "TIME: ${execution} ms"
+    new File("build.log").text += "${Calendar.getInstance().getTime()} : ${execution} ms \n"
 }
 
 task clean(type: Delete) {

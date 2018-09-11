@@ -68,9 +68,11 @@ class LoginActivity : AppCompatActivity() {
                 Log.d("ymd", "uid: " + response!!.header("Uid"))
                 Log.d("ymd", "token: " + response!!.header("Access-Token"))
                 val token = response.header("Access-Token")
+                val clientHash = response.header("client")
                 val intent = Intent(app, ChatActivity::class.java )
                         .putExtra("EMAIL", id)
                         .putExtra("TOKEN", token)
+                        .putExtra("CLIENT", clientHash)
                 startActivity(intent)
             }
         })
