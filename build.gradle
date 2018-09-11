@@ -5,8 +5,8 @@ long startTime
 buildscript {
     ext.kotlin_version = '1.2.30'
     repositories {
-//        google()
         jcenter()
+        google()
         maven { url 'https://maven.google.com' }
     }
     dependencies {
@@ -19,9 +19,10 @@ buildscript {
 
 allprojects {
     repositories {
-//        google()
+        google()
         jcenter()
         maven { url 'https://maven.google.com' }
+//        google()
     }
 }
 gradle.beforeProject {
@@ -32,7 +33,7 @@ gradle.buildFinished {
     println "build finished!"
     long execution = (System.nanoTime() - startTime) / 1000000
     println "TIME: ${execution} ms"
-    new File("build.log").text += "${Calendar.getInstance().getTime()} : ${execution} ms \n"
+    //new File("build.log").text += "${Calendar.getInstance().getTime()} : ${execution} ms \n"
 }
 
 task clean(type: Delete) {
