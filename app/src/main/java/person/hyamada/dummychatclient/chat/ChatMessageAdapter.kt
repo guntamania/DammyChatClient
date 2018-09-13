@@ -9,7 +9,7 @@ import android.widget.TextView
 import person.hyamada.dummychatclient.R
 import person.hyamada.dummychatclient.data.Message
 
-class ChatMessageAdapter(private val context: Context, private val itemList:List<Message>)
+class ChatMessageAdapter(private val context: Context, private var itemList:MutableList<Message>)
     :RecyclerView.Adapter<ChatMessageAdapter.ChatViewHolder>() {
 
     private var mRecyclerView : RecyclerView? = null
@@ -35,6 +35,11 @@ class ChatMessageAdapter(private val context: Context, private val itemList:List
 
     override fun getItemCount(): Int {
         return itemList.size
+    }
+
+    fun addItem(message: Message) {
+        itemList.add(message)
+        notifyDataSetChanged()
     }
 
     class ChatViewHolder(view : View): RecyclerView.ViewHolder(view) {

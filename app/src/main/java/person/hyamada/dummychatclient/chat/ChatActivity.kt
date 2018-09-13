@@ -19,22 +19,30 @@ class ChatActivity : AppCompatActivity() {
 
     private var mPresenter: ChatPresenter? = null
     private var mRecyclerView: RecyclerView? = null
+    private var mChatMessageAdapter: ChatMessageAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
         mPresenter = ChatPresenter(this)
         mPresenter?.onMessageArrive = { messages : Array<Message> ->
-            mRecyclerView!!.adapter = ChatMessageAdapter(this, messages.toList())
+            mChatMessageAdapter = ChatMessageAdapter(this, messages.toMutableList())
+            mRecyclerView!!.adapter = mChatMessageAdapter
         }
         mPresenter?.getMessages()
+        mPresenter?.onNewMessageArrive = {message ->
+            if (mChatMessageAdapter != null) {
+                mChatMessageAdapter!!.addItem(message)
+            }
+        }
         findViewById<Button>(R.id.send_message).setOnClickListener{_ ->
             mPresenter?.sendMessage(findViewById<EditText>(R.id.message_edit_text).text.toString())
             findViewById<EditText>(R.id.message_edit_text).text.clear()
         }
+        mPresenter?.subscribe()
 
-        mRecyclerView = findViewById<RecyclerView>(R.id.chat_recycler_view)
-        //chatRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        mRecyclerView = findViewById(R.id.chat_recycler_view)
+        mRecyclerView?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
     }
 
