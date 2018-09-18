@@ -40,8 +40,12 @@ class ChatPresenter(activity: ChatActivity) {
                 .onRejected {
                     android.util.Log.d("ymd", "onRejected")
                 }
-                .onReceived{
-                    data -> android.util.Log.d("ymd", "onReceived" + data.toString())
+                .onReceived{ data ->
+                    val mapper = jacksonObjectMapper()
+                    val messages = mapper.readValue<Message>(data.toString())
+                    activity.runOnUiThread {
+                        onNewMessageArrive?.invoke(messages)
+                    }
                 }
                 .onFailed{
                     android.util.Log.d("ymd", "onFailed")

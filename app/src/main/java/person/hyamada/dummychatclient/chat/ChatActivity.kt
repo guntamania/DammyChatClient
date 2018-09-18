@@ -28,11 +28,13 @@ class ChatActivity : AppCompatActivity() {
         mPresenter?.onMessageArrive = { messages : Array<Message> ->
             mChatMessageAdapter = ChatMessageAdapter(this, messages.toMutableList())
             mRecyclerView!!.adapter = mChatMessageAdapter
+            mRecyclerView!!.scrollToPosition(mChatMessageAdapter!!.itemCount - 1)
         }
         mPresenter?.getMessages()
         mPresenter?.onNewMessageArrive = {message ->
             if (mChatMessageAdapter != null) {
                 mChatMessageAdapter!!.addItem(message)
+                mRecyclerView!!.scrollToPosition(mChatMessageAdapter!!.itemCount - 1)
             }
         }
         findViewById<Button>(R.id.send_message).setOnClickListener{_ ->
