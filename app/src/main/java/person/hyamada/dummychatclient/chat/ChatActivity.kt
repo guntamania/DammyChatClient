@@ -19,23 +19,18 @@ class ChatActivity : AppCompatActivity() {
 
     private var mPresenter: ChatPresenter? = null
     private var mRecyclerView: RecyclerView? = null
-    private var mChatMessageAdapter: ChatMessageAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
         mPresenter = ChatPresenter(this)
-        mPresenter?.onMessageArrive = { messages : Array<Message> ->
-            mChatMessageAdapter = ChatMessageAdapter(this, messages.toMutableList())
-            mRecyclerView!!.adapter = mChatMessageAdapter
-            mRecyclerView!!.scrollToPosition(mChatMessageAdapter!!.itemCount - 1)
+        mPresenter?.onMessageArrive = { messages : Array<Message>, adapter : ChatMessageAdapter ->
+            mRecyclerView!!.adapter = adapter
+            mRecyclerView!!.scrollToPosition(adapter.itemCount - 1)
         }
         mPresenter?.getMessages()
-        mPresenter?.onNewMessageArrive = {message ->
-            if (mChatMessageAdapter != null) {
-                mChatMessageAdapter!!.addItem(message)
-                mRecyclerView!!.scrollToPosition(mChatMessageAdapter!!.itemCount - 1)
-            }
+        mPresenter?.onNewMessageArrive = {message , adapter : ChatMessageAdapter ->
+            mRecyclerView!!.scrollToPosition(adapter.itemCount - 1)
         }
         findViewById<Button>(R.id.send_message).setOnClickListener{_ ->
             mPresenter?.sendMessage(findViewById<EditText>(R.id.message_edit_text).text.toString())

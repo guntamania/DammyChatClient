@@ -19,8 +19,19 @@
         android:background="@drawable/ic_balloon_left_bg"
         android:paddingTop="8dp"
         android:paddingBottom="6dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="18dp"/>
+    <TextView
+        android:id="@+id/my_message_in_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:background="@drawable/ic_balloon_right_bg"
+        android:paddingTop="8dp"
+        android:paddingBottom="6dp"
         android:paddingLeft="18dp"
-        android:paddingRight="12dp"/>
+        android:paddingRight="20dp"
+        android:visibility="gone"/>
 
 
 </LinearLayout>

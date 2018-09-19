@@ -19,8 +19,10 @@ class ChatPresenter(activity: ChatActivity) {
     val email: String = activity.intent.getStringExtra("EMAIL")
     val token: String = activity.intent.getStringExtra("TOKEN")
     val client: String = activity.intent.getStringExtra("CLIENT")
-    var onMessageArrive: ((messages: Array<Message>) -> Unit)? = null
-    var onNewMessageArrive: ((message: Message) -> Unit)? = null
+    var onMessageArrive: ((messages: Array<Message>, adapter: ChatMessageAdapter) -> Unit)? = null
+    var onNewMessageArrive: ((message: Message, adapter: ChatMessageAdapter) -> Unit)? = null
+
+    private var mChatMessageAdapter: ChatMessageAdapter = ChatMessageAdapter(activity, this)
 
     init {
     }
@@ -42,9 +44,11 @@ class ChatPresenter(activity: ChatActivity) {
                 }
                 .onReceived{ data ->
                     val mapper = jacksonObjectMapper()
-                    val messages = mapper.readValue<Message>(data.toString())
+                    val message = mapper.readValue<Message>(data.toString())
+                    android.util.Log.d("ymd", "added")
                     activity.runOnUiThread {
-                        onNewMessageArrive?.invoke(messages)
+                        mChatMessageAdapter!!.addItem(message)
+                        onNewMessageArrive?.invoke(message, mChatMessageAdapter!!)
                     }
                 }
                 .onFailed{
@@ -82,8 +86,9 @@ class ChatPresenter(activity: ChatActivity) {
                 }
                 val mapper = jacksonObjectMapper()
                 val messages = mapper.readValue<Array<Message>>(response.body()!!.string())
+                mChatMessageAdapter.itemList=messages.toMutableList()
                 activity.runOnUiThread {
-                    onMessageArrive?.invoke(messages)
+                    onMessageArrive?.invoke(messages, mChatMessageAdapter!!)
                 }
 
             }
@@ -123,8 +128,9 @@ class ChatPresenter(activity: ChatActivity) {
                 }
                 val mapper = jacksonObjectMapper()
                 val messages = mapper.readValue<Array<Message>>(response.body()!!.string())
+                mChatMessageAdapter.itemList = messages.toMutableList()
                 activity.runOnUiThread {
-                    onMessageArrive?.invoke(messages)
+                    onMessageArrive?.invoke(messages, mChatMessageAdapter!!)
                 }
 
             }

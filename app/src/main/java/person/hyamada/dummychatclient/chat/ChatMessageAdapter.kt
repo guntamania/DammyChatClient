@@ -9,11 +9,11 @@ import android.widget.TextView
 import person.hyamada.dummychatclient.R
 import person.hyamada.dummychatclient.data.Message
 
-class ChatMessageAdapter(private val context: Context, private var itemList:MutableList<Message>)
+class ChatMessageAdapter(private val context: Context, private val mPresenter: ChatPresenter)
     :RecyclerView.Adapter<ChatMessageAdapter.ChatViewHolder>() {
 
     private var mRecyclerView : RecyclerView? = null
-
+    var itemList:MutableList<Message>? = null
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         mRecyclerView = recyclerView
@@ -27,23 +27,31 @@ class ChatMessageAdapter(private val context: Context, private var itemList:Muta
     }
 
     override fun onBindViewHolder(viewHolder: ChatViewHolder, position: Int) {
-        viewHolder?.let {
-            it.messageView.text = itemList.get(position).message
-            it.usernameView.text = itemList.get(position).user
+        viewHolder.let { vh ->
+            val item = itemList!!.get(position)
+            if (item.email.equals(mPresenter.email)) {
+                vh.myMessageView.visibility = View.VISIBLE
+                vh.messageView.visibility = View.GONE
+                vh.myMessageView.text = item.message
+            } else {
+                vh.messageView.text = item.message
+            }
+            vh.usernameView.text = item.user
         }
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return itemList!!.size
     }
 
     fun addItem(message: Message) {
-        itemList.add(message)
+        itemList!!.add(message)
         notifyDataSetChanged()
     }
 
     class ChatViewHolder(view : View): RecyclerView.ViewHolder(view) {
         val usernameView: TextView = view.findViewById(R.id.username_in_item)
         val messageView: TextView = view.findViewById(R.id.message_in_item)
+        val myMessageView: TextView = view.findViewById(R.id.my_message_in_item)
     }
 }
